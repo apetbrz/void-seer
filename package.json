@@ -9,6 +9,7 @@
         "build": "react-router build",
         "dev": "react-router dev",
         "start": "env ENVIRONMENT='RELEASE' node server",
+        "preview": "node server",
         "typecheck": "react-router typegen && tsc"
     },
     "dependencies": {

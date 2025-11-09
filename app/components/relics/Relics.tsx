@@ -112,10 +112,10 @@ export default function Relics() {
                     Last Worldstate Update: {new Date(timestamp).toLocaleTimeString()}
                 </p>
                 <ControlBox settings={displaySettings} togglePane={togglePane} toggleMission={toggleMission} toggleControlVisibility={toggleControlVisibility} />
-                <div className={"pt-2 bg-stone-100 dark:bg-stone-900 transition-transform duration-300 ease-in " + (controlsVisible ? "not-lg:translate-y-72 lg:translate-y-32" : "translate-y-0")}>
-                    <div className="flex justify-between not-lg:flex-col lg:flex-row  lg:mx-32">
-                        <div className={"grid grid-cols-3 w-[100%] " + (displaySettings.normal ? "" : "hidden")}>{normalMissions}</div>
-                        <div className={"grid grid-cols-3 w-[100%] " + (displaySettings.steelpath ? "" : "hidden")}>{spMissions}</div>
+                <div className={"pt-2 bg-stone-100 dark:bg-stone-900 transition-transform duration-300 ease-in " + (controlsVisible ? "not-lg:translate-y-68 lg:translate-y-26" : "translate-y-0")}>
+                    <div className="flex gap-8 m-4 justify-between not-lg:flex-col lg:flex-row  lg:mx-32">
+                        <div className={"shadow-inner shadow-stone-300 dark:shadow-stone-900 bg-stone-200 dark:bg-stone-800 grid grid-cols-3 w-[100%] " + (displaySettings.normal ? "" : "hidden")}>{normalMissions}</div>
+                        <div className={"shadow-inner shadow-stone-300 dark:shadow-stone-900 bg-stone-200 dark:bg-stone-800 grid grid-cols-3 w-[100%] " + (displaySettings.steelpath ? "" : "hidden")}>{spMissions}</div>
                     </div>
                 </div>
             </>
