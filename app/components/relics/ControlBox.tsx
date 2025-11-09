@@ -23,14 +23,14 @@ function ControlBox(props: { settings: any, togglePane: Function, toggleMission:
 
     let normalButtons = Object.keys(props.settings.missions.normal).map((missionName) => {
         return <button
-            className={`px-1 h-8 shadow shadow-stone-300 dark:shadow-stone-900 ${props.settings.normal && props.settings.missions.normal[missionName] ? "bg-stone-100 dark:bg-stone-700" : "text-stone-500 dark:text-stone-500 bg-stone-200 dark:bg-stone-900"}`}
+            className={`px-1 prose prose-stone dark:prose-invert text-nowrap h-8 shadow shadow-stone-300 dark:shadow-stone-900 bg-stone-100 dark:bg-stone-800 ${props.settings.missions.normal[missionName] && props.settings.normal ? "" : "opacity-40"}`}
             onClick={toggleMissionCallback(missionName, false)}
             key={missionName}
             disabled={!active || !props.settings.normal}
         >{missionName}</button>
     })
     let steelpathButtons = Object.keys(props.settings.missions.steelpath).map((missionName) => {
-        return <button className={`px-1 h-8 shadow shadow-stone-300 dark:shadow-stone-900 ${props.settings.steelpath && props.settings.missions.steelpath[missionName] ? "bg-stone-100 dark:bg-stone-700" : "text-stone-500 dark:text-stone-500 bg-stone-200 dark:bg-stone-900"}`}
+        return <button className={`px-1 prose prose-stone dark:prose-invert text-nowrap h-8 shadow shadow-stone-300 dark:shadow-stone-900 bg-stone-100 dark:bg-stone-800 ${props.settings.missions.steelpath[missionName] && props.settings.steelpath ? "" : "opacity-40"}`}
             onClick={toggleMissionCallback(missionName, true)}
             key={"sp" + missionName}
             disabled={!active || !props.settings.steelpath}
@@ -46,10 +46,10 @@ function ControlBox(props: { settings: any, togglePane: Function, toggleMission:
                     </svg>
                 </button>
             </div>
-            <div className="w-auto flex flex-col space-y-2 py-4 shadow-inner shadow-stone-300 dark:shadow-stone-900 bg-stone-200 dark:bg-stone-800">
+            <div className="w-auto flex flex-col space-y-2 py-4 shadow-inner shadow-stone-300 dark:shadow-stone-950 bg-stone-200 dark:bg-stone-900">
                 <div className="flex items-center space-x-2 not-lg:justify-evenly mx-auto not-lg:pb-2 not-lg:border-b-1 not-lg:border-stone-400 not-lg:dark:border-stone-500">
                     <button
-                        className={`prose prose-stone dark:prose-invert text-nowrap w-20 h-8 shadow shadow-stone-300 dark:shadow-stone-900 ${props.settings.normal ? "bg-stone-100 dark:bg-stone-700" : "text-stone-500 dark:text-stone-500 bg-stone-200 dark:bg-stone-900"}`}
+                        className={`px-1 prose prose-stone dark:prose-invert text-nowrap w-20 h-8 shadow shadow-stone-300 dark:shadow-stone-900 bg-stone-100 dark:bg-stone-800 ${props.settings.normal ? "" : "opacity-40"}`}
                         onClick={togglePaneCallback("normal")}
                     >normal</button>
                     <div className="not-lg:h-28 lg:h-8 border-r-1 border-stone-400 dark:border-stone-500"></div>
@@ -60,7 +60,7 @@ function ControlBox(props: { settings: any, togglePane: Function, toggleMission:
                 </div>
                 <div className="flex items-center space-x-2 not-lg:justify-evenly mx-auto">
                     <button
-                        className={`prose prose-stone dark:prose-invert text-nowrap w-20 h-8 shadow shadow-stone-300 dark:shadow-stone-900 ${props.settings.steelpath ? "bg-stone-100 dark:bg-stone-700" : "text-stone-500 dark:text-stone-500 bg-stone-200 dark:bg-stone-900"}`}
+                        className={`px-1 prose prose-stone dark:prose-invert text-nowrap w-20 h-8 shadow shadow-stone-300 dark:shadow-stone-900 bg-stone-100 dark:bg-stone-800 ${props.settings.steelpath ? "" : "opacity-40"}`}
                         onClick={togglePaneCallback("steelpath")}
                     >steel path</button>
                     <div className="not-lg:h-28 lg:h-8 border-r-1 border-stone-400 dark:border-stone-500"></div>
