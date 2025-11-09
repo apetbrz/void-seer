@@ -3,7 +3,9 @@ import express from "express";
 import https from "https";
 import fs from "fs";
 import cors from "cors";
-import gatherFissureMissions from "./data.js";
+import gatherFissureMissions from "./server/data.js";
+import "react-router";
+import { createRequestHandler } from "@react-router/express";
 
 let port;
 let corsOrigin;
@@ -30,10 +32,11 @@ let solnodes = {};
 let updateTime = 0;
 
 app.get("/", (req, res) => {
-    let fileName = path.resolve("../dist/index.html");
+    let fileName = path.resolve("./build/client/index.html");
     res.sendFile(fileName);
 });
-app.use("/assets", express.static("../dist/assets"));
+app.use("/*", express.static("./build/client/"));
+// app.use("/assets", express.static("./build/client/assets"));
 app.get("/worldstate", async (req, res) => {
     let now = Date.now();
     let clientIp = req.get("x-real-ip");
@@ -75,9 +78,9 @@ let getSolnodesData = async () => {
                 console.log("...solnodes data loaded");
             }
         })
-        .catch((err) => {
-            console.log("SOLNODES FETCH ERR: " + err);
-        });
+    // .catch((err) => {
+    //     console.log("SOLNODES FETCH ERR: " + err);
+    // });
 }
 
 setInterval(() => {
