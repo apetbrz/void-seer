@@ -1,9 +1,6 @@
-import { useState, useEffect, } from 'react'
-
 function MissionType(props: { title: String, missions: Array<{ relic: String, node: String, faction: String, until: any }> }): React.ReactNode {
 
     if (!props.missions) return (<></>)
-    const trimmedTitle = props.title.replace(" ", "");
 
     let count = 0;
     const missionList = props.missions.map(mission => {

@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import MissionType from "./MissionType.js";
 import { ControlBox, defaultSettingsFromData } from "./ControlBox.js";
 
-let hostUrl: String;
-if (import.meta.env.DEV) hostUrl = "http://localhost:3000";
-else hostUrl = "https://relics.apetbrz.dev";
+let hostUrl: URL;
+if (import.meta.env.DEV) hostUrl = new URL("http://localhost:3000");
+else hostUrl = new URL("https://relics.apetbrz.dev");
 
 //save settings to local storage
 function saveSettings(newSettings: any) {
@@ -25,14 +25,13 @@ export default function Relics() {
 
     //this fetches worldstate data from cache server
     const fetchAPI = async () => {
-        const res = await fetch("https://relics.apetbrz.dev/worldstate").then((res) => res.json());
+        const res = await fetch("/worldstate").then((res) => res.json());
         setTimestamp(res.timestamp);
         setData(res.wfdata);
     };
 
     //fetch api
     useEffect(() => {
-
         //CLEAR PREVIOUS SETTINGS STORAGE KEY ON INITIAL LOAD (just in case) (remove later)
         localStorage.removeItem("enabledMissions");
 
@@ -50,6 +49,7 @@ export default function Relics() {
         setDisplaySettings(settings);
         saveSettings(settings);
     };
+    //toggles visibility of normal/steelpath mode sections
     const togglePane = (name: string) => {
         let settings = { ...displaySettings };
         settings[name] = !settings[name];
