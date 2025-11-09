@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import MissionType from "./MissionType.js";
 import { ControlBox, defaultSettingsFromData } from "./ControlBox.js";
+import Loading from "../shared/Loading.js";
 
 let hostUrl: URL;
 if (import.meta.env.DEV) hostUrl = new URL("http://localhost:3000");
@@ -84,7 +85,7 @@ export default function Relics() {
     }, [data]);
 
     //if data is invalid, render empty element
-    if (!data?.normal || !data?.steelpath || !displaySettings.missions) return (<></>)
+    if (!data?.normal || !data?.steelpath || !displaySettings.missions) return (<Loading />)
     //otherwise, valid data!
     else {
         //get mission lists from the data directly:
