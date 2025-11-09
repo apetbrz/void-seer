@@ -1,22 +1,24 @@
-FROM node:20-alpine AS development-dependencies-env
-COPY . /app
-WORKDIR /app
+# build client js
+FROM node:22 AS build
+WORKDIR /src
+# packages
+COPY ./package.json ./package-lock.json ./vite.config.ts ./tsconfig.json ./react-router.config.ts /src/
 RUN npm ci
-
-FROM node:20-alpine AS production-dependencies-env
-COPY ./package.json package-lock.json /app/
-WORKDIR /app
-RUN npm ci --omit=dev
-
-FROM node:20-alpine AS build-env
-COPY . /app/
-COPY --from=development-dependencies-env /app/node_modules /app/node_modules
-WORKDIR /app
+# src files
+COPY ./app /src/app
 RUN npm run build
 
-FROM node:20-alpine
-COPY ./package.json package-lock.json /app/
-COPY --from=production-dependencies-env /app/node_modules /app/node_modules
-COPY --from=build-env /app/build /app/build
+# host
+FROM node:22
 WORKDIR /app
+# packages
+COPY ./package.json ./package-lock.json ./react-router.config.ts ./tsconfig.json /app/
+RUN npm ci --omit=dev
+# built files
+COPY --from=build /src/build /app/build
+COPY ./server /app/server
+COPY ./secret /app/secret
+COPY server.js /app/
+# exec
+ENV ENVIRONMENT="RELEASE"
 CMD ["npm", "run", "start"]
