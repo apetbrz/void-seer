@@ -66,7 +66,7 @@ export default function Relics() {
         let localSettings = JSON.parse(localStorage.getItem("displaySettings") || "{}");
 
         //assume normal/steelpath have identical mission names
-        let localMissionTypes = localSettings?.normal ? Object.keys(localSettings?.normal) : [];
+        let localMissionTypes = localSettings?.missions?.normal ? Object.keys(localSettings?.missions?.normal) : [];
         let incomingMissionTypes = Object.keys(data.normal);
 
         //if the two lists are not identical,
@@ -74,6 +74,7 @@ export default function Relics() {
             !(incomingMissionTypes.length == localMissionTypes.length &&
                 localMissionTypes.every((element, key) => element == incomingMissionTypes[key]))
         ) {
+            console.log("saved settings mismatch with incoming data, reconstructing...");
             //create default settings on the new mission data
             let defaultSettings = defaultSettingsFromData(data);
             //and save
