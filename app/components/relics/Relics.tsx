@@ -115,11 +115,12 @@ export default function Relics() {
                 </p>
                 <ControlBox settings={displaySettings} togglePane={togglePane} toggleMission={toggleMission} toggleControlVisibility={toggleControlVisibility} />
                 <div className={"bg-stone-100 dark:bg-stone-800 transition-transform duration-300 ease-in " + (controlsVisible ? "not-lg:translate-y-68 lg:translate-y-26" : "translate-y-0")}>
-                    <div className="flex lg:gap-8 justify-between not-lg:flex-col lg:flex-row xl:mx-32 lg:mx-8 pt-8 min-h-256">
+                    <div className="flex lg:gap-8 justify-between not-lg:flex-col lg:flex-row xl:mx-32 lg:mx-8 pt-8">
                         <div className={"shadow-inner shadow-stone-300 dark:shadow-stone-950 bg-stone-200 dark:bg-stone-900 grid grid-cols-3 w-[100%] h-min " + (displaySettings.normal ? "" : "hidden")}>{normalMissions}</div>
                         <div className={"shadow-inner shadow-stone-300 dark:shadow-stone-950 bg-stone-200 dark:bg-stone-900 grid grid-cols-3 w-[100%] h-min " + (displaySettings.steelpath ? "" : "hidden")}>{spMissions}</div>
                     </div>
                 </div>
+                <div className={"lg:min-h-34 not-lg:min-h-76"}></div>
             </>
         );
     }
