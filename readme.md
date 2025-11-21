@@ -1,4 +1,4 @@
-# Warframe Fissure Mission Tracker
+# Void Seer
 
 ## A quick tool to parse the Warframe public worldstate API for Void Fissure missions.
 
@@ -14,4 +14,3 @@ https://relics.apetbrz.dev/
   - client vite server runs on port 5173
 - for production, run `npm run build` to build the client, and `npm run start` to start the server with the built files
   - prod server runs on port 4001
-  - temporarily hardcoded to target my domain
