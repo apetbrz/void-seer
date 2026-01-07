@@ -4,9 +4,9 @@ read -p "This will shut down and delete the existing container, okay? [y/N] " co
 [ "${conf,,}" = "y" ] || exit
 
 echo -n "Shutting down existing container: "
-docker -v kill void-seer
+docker kill void-seer
 echo -n "Deleting existing container: "
-docker -v rm void-seer
+docker rm void-seer
 echo "[Building latest version]"
 docker build -t void-seer .
 echo "
