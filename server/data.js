@@ -3,6 +3,7 @@ const missionIds = {
     capture: "MT_CAPTURE",
     excavation: "MT_EXCAVATE",
     exterminate: "MT_EXTERMINATE",
+    defense: "MT_DEFENSE",
     disruption: "MT_ARTIFACT",
     survival: "MT_SURVIVAL",
     rescue: "MT_RESCUE",
@@ -15,6 +16,7 @@ const missionTitles = {
     MT_CAPTURE: "capture",
     MT_EXCAVATE: "excavation",
     MT_EXTERMINATE: "exterminate",
+    MT_DEFENSE: "defense",
     MT_ARTIFACT: "disruption",
     MT_SURVIVAL: "survival",
     MT_RESCUE: "rescue",
@@ -32,18 +34,25 @@ const relicTiers = {
     VoidT6: "Omnia"
 }
 
+import solnodes from "./solnodes.js"
+
 //get info for mission from solnodes
-const solnodeLookup = (solnodes, node) => {
-    if (!solnodes || solnodes[node] === undefined) {
+const solnodeLookup = (node) => {
+    if (!solnodes) {
         console.log("SOLNODES INVALID");
         return {};
     }
-    return solnodes[node];
+    const nodeinfo = solnodes[node];
+    if (nodeinfo === undefined) {
+        console.log("SOLNODE MISSING? " + node)
+        return {};
+    }
+    return nodeinfo;
 }
 
 //convert fissure mission in worldstate into object for rendering on UI
-const worldstateMissionToJSON = (mission, solnodes) => {
-    let node = solnodeLookup(solnodes, mission.Node);
+const worldstateMissionToJSON = (mission) => {
+    let node = solnodeLookup(mission.Node);
     return {
         relic: relicTiers[mission.Modifier],
         node: node.value,
@@ -54,7 +63,7 @@ const worldstateMissionToJSON = (mission, solnodes) => {
 }
 
 //scrape worldstate for all fissure missions and return, separating normal and steel path
-const gatherFissureMissions = (missionData, solnodes) => {
+const gatherFissureMissions = (missionData) => {
     if (!missionData) return;
     if (!missionData.ActiveMissions) return;
 
@@ -62,6 +71,7 @@ const gatherFissureMissions = (missionData, solnodes) => {
         alchemy: [],
         capture: [],
         cascade: [],
+        defense: [],
         disruption: [],
         excavation: [],
         exterminate: [],
@@ -73,6 +83,7 @@ const gatherFissureMissions = (missionData, solnodes) => {
         alchemy: [],
         capture: [],
         cascade: [],
+        defense: [],
         disruption: [],
         excavation: [],
         exterminate: [],
@@ -84,8 +95,14 @@ const gatherFissureMissions = (missionData, solnodes) => {
     missionData.ActiveMissions.forEach(mission => {
         let missionTitle = missionTitles[mission.MissionType];
         if (missionTitle) {
-            let missionObj = worldstateMissionToJSON(mission, solnodes);
-            (missionObj.steelpath ? steelpath : normal)[missionTitle]?.push(missionObj);
+            let missionInfo = worldstateMissionToJSON(mission);
+            const missionObj = {
+                relic: missionInfo.relic,
+                node: missionInfo.node,
+                faction: missionInfo.faction,
+                until: missionInfo.until
+            };
+            (missionInfo.steelpath ? steelpath : normal)[missionTitle]?.push(missionObj);
         }
     });
 

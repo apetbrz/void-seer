@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react'
-import '../App.css'
 
-function Clock() {
+export default function Clock() {
 
     const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
 
     //begin 1 second timer, for keeping local time correct
-    //TODO: PLEASE MOVE TO CHILD
     useEffect(() => {
         setInterval(() => {
             setCurrentTime(new Date().toLocaleTimeString());
@@ -14,10 +12,8 @@ function Clock() {
     }, []);
 
     return (
-        <div className="clock">
+        <div className="mx-auto w-max">
             <p id="time">Current Time: {currentTime}</p>
         </div>
     )
 }
-
-export default Clock

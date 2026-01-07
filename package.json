@@ -1,24 +1,38 @@
 {
-    "name": "fissures-app",
-    "version": "1.0.0",
+    "name": "void-seer",
+    "version": "0.2.0",
     "description": "I wanted a quick and easy way to check the Warframe public worldstate API for specific missions. So I'm making this. And learning Node.js, Express.js, React, and Vite along the way.",
-    "scripts": {
-        "dev:client": "cd client && npm run dev",
-        "dev:client:host": "cd client && npm run dev-host",
-        "dev:server": "export IS_DEV=true && cd server && npm run dev",
-        "dev": "if ! command -v tmux ; then echo 'tmux is not installed! please run dev:client and dev:server separately!' >&2 && exit 1; fi && npm run dev:confirmed",
-        "dev:confirmed": "tmux new-session -s 'fissures-app (dev)' 'npm run dev:server' \\; split-window 'npm run dev:client' \\; select-layout even-horizontal \\;",
-        "build": "cd client && npm run build",
-        "start": "cd server && npm run start"
-    },
     "author": "Arthur Petroff",
     "license": "ISC",
-    "dependencies": {
-        "fissures-app": "file:",
-        "js-cookie": "^3.0.5"
+    "type": "module",
+    "scripts": {
+        "build": "react-router build",
+        "dev": "react-router dev",
+        "start": "env ENVIRONMENT='RELEASE' node server",
+        "preview": "node server",
+        "typecheck": "react-router typegen && tsc"
     },
-    "workspaces": [
-        "server",
-        "client"
-    ]
+    "dependencies": {
+        "@react-router/node": "^7.9.2",
+        "@react-router/serve": "^7.9.2",
+        "isbot": "^5.1.31",
+        "react": "^19.1.1",
+        "react-dom": "^19.1.1",
+        "react-router": "^7.9.2",
+        "cors": "^2.8.5",
+        "express": "^4.21.2",
+        "server": "file:"
+    },
+    "devDependencies": {
+        "@react-router/dev": "^7.9.2",
+        "@tailwindcss/typography": "^0.5.19",
+        "@tailwindcss/vite": "^4.1.13",
+        "@types/node": "^22",
+        "@types/react": "^19.1.13",
+        "@types/react-dom": "^19.1.9",
+        "tailwindcss": "^4.1.13",
+        "typescript": "^5.9.2",
+        "vite": "^7.1.7",
+        "vite-tsconfig-paths": "^5.1.4"
+    }
 }

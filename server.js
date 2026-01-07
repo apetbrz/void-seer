@@ -3,7 +3,9 @@ import express from "express";
 import https from "https";
 import fs from "fs";
 import cors from "cors";
-import gatherFissureMissions from "./data.js";
+import gatherFissureMissions from "./server/data.js";
+import "react-router";
+import { createRequestHandler } from "@react-router/express";
 
 let port;
 let corsOrigin;
@@ -26,23 +28,20 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 let wfdata = {};
-let solnodes = {};
 let updateTime = 0;
 
 app.get("/", (req, res) => {
-    let fileName = path.resolve("../dist/index.html");
+    let fileName = path.resolve("./build/client/index.html");
     res.sendFile(fileName);
 });
-app.use("/assets", express.static("../dist/assets"));
+// app.use("/*", express.static("./build/client/"));
+app.use("/assets", express.static("./build/client/assets"));
 app.get("/worldstate", async (req, res) => {
     let now = Date.now();
     let clientIp = req.get("x-real-ip");
     if (!clientIp) clientIp = req.ip + " - not proxied";
     console.log("worldstate requested - " + new Date(now).toLocaleTimeString() + " - " + clientIp)
-    if (updateTime < (now - 1000 * 60 * 1)) {
-        console.log("data timeout, last update at - " + new Date(updateTime).toLocaleTimeString());
-        await updateData();
-    }
+
     let output = { wfdata: wfdata, timestamp: updateTime };
     res.set("Access-Control-Allow-Origin", "*")
     res.json(output);
@@ -54,39 +53,24 @@ let updateData = async () => {
     await fetch('https://content.warframe.com/dynamic/worldState.php')
         .then((res) => res.json())
         .then((data) => {
-            console.log("...wfdata loaded");
-            wfdata = gatherFissureMissions(data, solnodes);
             updateTime = data.Time * 1000;
+            console.log("...wfdata loaded");
+            wfdata = gatherFissureMissions(data);
             console.log("...wfdata parsed");
         })
         .catch((err) => {
             console.log("WORLDSTATE FETCH ERR: " + err);
-        });
-}
-
-let getSolnodesData = async () => {
-    console.log("fetching solnodes data...");
-    await fetch('https://api.warframestat.us/solNodes/')
-        .then((res) => res.json())
-        .then((data) => {
-            if (data === null) console.log("...failed to load solnodes data")
-            else {
-                solnodes = data;
-                console.log("...solnodes data loaded");
+            if (!wfdata) {
+                console.log("FAILED TO CACHE INIT WORLDSTATE, EXITING...")
+                exit(1);
             }
-        })
-        .catch((err) => {
-            console.log("SOLNODES FETCH ERR: " + err);
+            else console.log("CONTINUING WITH CACHED FILE FROM " + new Date(updateTime).toLocaleTimeString());
         });
 }
 
 setInterval(() => {
     updateData();
 }, 2 * 60 * 1000);
-
-setInterval(() => {
-    getSolnodesData();
-}, 60 * 60 * 1000);
 
 var server;
 if (process.env.ENVIRONMENT == "RELEASE") {
@@ -105,7 +89,6 @@ else {
 }
 
 let main = async () => {
-    await getSolnodesData();
     await updateData();
     server.listen(port, () => {
         console.log("server started on port " + port + "\n\n");
