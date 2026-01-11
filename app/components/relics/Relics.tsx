@@ -19,10 +19,6 @@ export default function Relics() {
     const [timestamp, setTimestamp] = useState(0);
     //local user settings
     const [displaySettings, setDisplaySettings] = useState(JSON.parse(localStorage.getItem("displaySettings") || "{}"));
-    //slide-down state for control panel 
-    const [controlsVisible, setControlsVisible] = useState(false);
-
-    const toggleControlVisibility = () => { setControlsVisible(!controlsVisible) };
 
     //this fetches worldstate data from cache server
     const fetchAPI = async () => {
@@ -113,14 +109,11 @@ export default function Relics() {
                 <p className="mx-auto w-max">
                     Last Worldstate Update: {new Date(timestamp).toLocaleTimeString()}
                 </p>
-                <ControlBox settings={displaySettings} togglePane={togglePane} toggleMission={toggleMission} toggleControlVisibility={toggleControlVisibility} />
-                <div className={"bg-stone-100 dark:bg-stone-800 transition-transform duration-300 ease-in " + (controlsVisible ? "not-lg:translate-y-68 lg:translate-y-26" : "translate-y-0")}>
-                    <div className="flex lg:gap-8 justify-between not-lg:flex-col lg:flex-row xl:mx-32 lg:mx-8 pt-8">
-                        <div className={"shadow-inner shadow-stone-300 dark:shadow-stone-950 bg-stone-200 dark:bg-stone-900 grid grid-cols-3 w-[100%] h-min " + (displaySettings.normal ? "" : "hidden")}>{normalMissions}</div>
-                        <div className={"shadow-inner shadow-stone-300 dark:shadow-stone-950 bg-stone-200 dark:bg-stone-900 grid grid-cols-3 w-[100%] h-min " + (displaySettings.steelpath ? "" : "hidden")}>{spMissions}</div>
-                    </div>
+                <ControlBox settings={displaySettings} togglePane={togglePane} toggleMission={toggleMission} />
+                <div className="flex lg:gap-8 justify-between not-lg:flex-col lg:flex-row xl:mx-32 lg:mx-8 mt-8 mb-32 bg-stone-100 dark:bg-stone-800">
+                    <div className={"shadow-inner shadow-stone-300 dark:shadow-stone-950 bg-stone-200 dark:bg-stone-900 grid grid-cols-3 w-[100%] h-min " + (displaySettings.normal ? "" : "hidden")}>{normalMissions}</div>
+                    <div className={"shadow-inner shadow-stone-300 dark:shadow-stone-950 bg-stone-200 dark:bg-stone-900 grid grid-cols-3 w-[100%] h-min " + (displaySettings.steelpath ? "" : "hidden")}>{spMissions}</div>
                 </div>
-                <div className={"lg:min-h-34 not-lg:min-h-76"}></div>
             </>
         );
     }
