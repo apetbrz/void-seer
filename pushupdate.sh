@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 
+set -e
+
 read -p "This will shut down and delete the existing container, okay? [y/N] " conf
 [ "${conf,,}" = "y" ] || exit
 
+echo -n "Pulling latest changes: "
+git pull || exit 1
 echo -n "Shutting down existing container: "
 docker kill void-seer
 echo -n "Deleting existing container: "
