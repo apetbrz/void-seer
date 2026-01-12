@@ -35,7 +35,7 @@ function MissionType(props: { title: String, missions: Array<{ relic: String, no
     });
 
     return (
-        <div className="h-min bg-stone-100 dark:bg-stone-800 m-4 p-2 shadow shadow-stone-300 dark:shadow-stone-900">
+        <div className="h-min bg-stone-100 dark:bg-stone-800 p-2 shadow shadow-stone-300 dark:shadow-stone-900 overflow-hidden">
             <div className="grid grid-cols-1 pb-1">
                 <label className="prose prose-stone dark:prose-invert font-bold border-b-1 border-stone-400 dark:border-stone-500 pb-1">{props.title}</label>
                 <div className="">{missionList}</div>
