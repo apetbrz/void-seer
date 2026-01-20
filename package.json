@@ -7,7 +7,7 @@
     "type": "module",
     "scripts": {
         "build": "react-router build",
-        "dev": "react-router dev",
+        "dev": "tmux new-session -s 'void-seer (dev)' 'react-router dev' \\; split-window 'node server' \\; select-layout even-horizontal \\;",
         "start": "env ENVIRONMENT='RELEASE' node server",
         "preview": "node server",
         "typecheck": "react-router typegen && tsc"
