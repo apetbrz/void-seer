@@ -97,7 +97,7 @@ export default function Relics() {
         let spMissions = Object.keys(data.steelpath).filter((missionName) => displaySettings.missions.steelpath[missionName]).map((missionName) => {
             return (
                 <MissionType
-                    title={"sp " + missionName}
+                    title={missionName}
                     missions={data.steelpath[missionName]}
                     key={"sp" + missionName}
                 />

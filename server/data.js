@@ -1,29 +1,33 @@
-// surely theres a way to make this two-way? instead of two objs? shrug
-const missionIds = {
-    capture: "MT_CAPTURE",
-    excavation: "MT_EXCAVATE",
-    exterminate: "MT_EXTERMINATE",
-    defense: "MT_DEFENSE",
-    disruption: "MT_ARTIFACT",
-    survival: "MT_SURVIVAL",
-    rescue: "MT_RESCUE",
-    cascade: "MT_VOID_CASCADE",
-    flood: "MT_CORRUPTION",
-    alchemy: "MT_ALCHEMY",
+//:sort /[^:]*:/
+const missionTitles = {
+    MT_ALCHEMY: "Alchemy",
+    MT_CAPTURE: "Capture",
+    MT_VOID_CASCADE: "Cascade",
+    MT_DEFENSE: "Defense",
+    MT_ARTIFACT: "Disruption",
+    MT_EXCAVATE: "Excavation",
+    MT_EXTERMINATE: "Exterminate",
+    MT_CORRUPTION: "Flood",
+    MT_RETRIEVAL: "Hijack",
+    MT_HIVE: "Hive Sabotage",
+    MT_PURIFY: "Infested Salvage",
+    MT_TERRITORY: "Interception",
+    MT_MOBILE_DEFENSE: "Mobile Defense",
+    MT_RESCUE: "Rescue",
+    MT_SABOTAGE: "Sabotage",
+    MT_INTEL: "Spy",
+    MT_SURVIVAL: "Survival",
 }
 
-const missionTitles = {
-    MT_CAPTURE: "capture",
-    MT_EXCAVATE: "excavation",
-    MT_EXTERMINATE: "exterminate",
-    MT_DEFENSE: "defense",
-    MT_ARTIFACT: "disruption",
-    MT_SURVIVAL: "survival",
-    MT_RESCUE: "rescue",
-    MT_VOID_CASCADE: "cascade",
-    MT_CORRUPTION: "flood",
-    MT_ALCHEMY: "alchemy",
-}
+//generate the template for collecting missions from worldstate data
+//looks like:
+//{ capture: [], excavation: [], ... } etc.
+const missionsCollectorTemplate = Object.values(missionTitles)
+    .reduce(
+        (a, key) => (
+            { ...a, [key]: [] }
+        ),
+        {});
 
 const relicTiers = {
     VoidT1: "Lith",
@@ -38,72 +42,64 @@ import solnodes from "./solnodes.js"
 
 //get info for mission from solnodes
 const solnodeLookup = (node) => {
+    //check for invalid solnodes data (deprecated since included internally
     if (!solnodes) {
         console.log("SOLNODES INVALID");
         return {};
     }
+
+    //get info
     const nodeinfo = solnodes[node];
+
+    //check for missing node (means data is out of date)
     if (nodeinfo === undefined) {
         console.log("SOLNODE MISSING? " + node)
         return {};
     }
+
     return nodeinfo;
 }
 
 //convert fissure mission in worldstate into object for rendering on UI
+//returns an array with [0] = steel path boolean, [1] = mission data object
 const worldstateMissionToJSON = (mission) => {
     let node = solnodeLookup(mission.Node);
-    return {
-        relic: relicTiers[mission.Modifier],
-        node: node.value,
-        steelpath: mission.Hard != null,
-        faction: node.enemy,
-        until: Number(mission.Expiry.$date.$numberLong)
-    }
+    return [
+        mission.Hard != null,
+        {
+            relic: relicTiers[mission.Modifier],
+            node: node.value,
+            faction: node.enemy,
+            until: Number(mission.Expiry.$date.$numberLong)
+        }
+    ]
 }
 
 //scrape worldstate for all fissure missions and return, separating normal and steel path
 const gatherFissureMissions = (missionData) => {
+    //invalid data
     if (!missionData) return;
     if (!missionData.ActiveMissions) return;
 
-    var normal = {
-        alchemy: [],
-        capture: [],
-        cascade: [],
-        defense: [],
-        disruption: [],
-        excavation: [],
-        exterminate: [],
-        flood: [],
-        rescue: [],
-        survival: [],
-    };
-    var steelpath = {
-        alchemy: [],
-        capture: [],
-        cascade: [],
-        defense: [],
-        disruption: [],
-        excavation: [],
-        exterminate: [],
-        flood: [],
-        rescue: [],
-        survival: [],
-    };
+    //copy from template
+    //looks like:
+    //{ alchemy: [], capture: [], ... } etc.
+    var normal = JSON.parse(JSON.stringify(missionsCollectorTemplate));
+    var steelpath = JSON.parse(JSON.stringify(missionsCollectorTemplate));
 
+    //for each active mission,
     missionData.ActiveMissions.forEach(mission => {
+        //get the name
         let missionTitle = missionTitles[mission.MissionType];
-        if (missionTitle) {
-            let missionInfo = worldstateMissionToJSON(mission);
-            const missionObj = {
-                relic: missionInfo.relic,
-                node: missionInfo.node,
-                faction: missionInfo.faction,
-                until: missionInfo.until
-            };
-            (missionInfo.steelpath ? steelpath : normal)[missionTitle]?.push(missionObj);
-        }
+
+        //if nothing, its a mission we're ignoring
+        if (!missionTitle) return;
+
+        //get the data out of it
+        let missionInfo = worldstateMissionToJSON(mission);
+
+        //and push it to the correct array
+        (missionInfo[0] ? steelpath : normal)[missionTitle]?.push(missionInfo[1]);
     });
 
     return { normal, steelpath };
