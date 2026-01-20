@@ -40,16 +40,23 @@ export default function Relics() {
 
     //toggle mission visibility (used in ControlBox)
     const toggleMission = (title: any, steelpath = false) => {
+
         let settings = { ...displaySettings };
         let mode = steelpath ? "steelpath" : "normal";
+
         settings.missions[mode][title] = !displaySettings.missions[mode][title];
+
         setDisplaySettings(settings);
         saveSettings(settings);
     };
-    //toggles visibility of normal/steelpath mode sections
-    const togglePane = (name: string) => {
+    //toggles boolean settings (normal/steelpath visibility, hideempty)
+    const toggleSetting = (name: string) => {
+        //if setting exists and is not a boolean, do nothing (dont want to "toggle" an object haha)
+        if (displaySettings[name] != null && typeof displaySettings[name] !== typeof true) return;
+
         let settings = { ...displaySettings };
         settings[name] = !settings[name];
+
         setDisplaySettings(settings);
         saveSettings(settings);
     }
@@ -70,6 +77,8 @@ export default function Relics() {
         if (
             !(incomingMissionTypes.length == localMissionTypes.length &&
                 localMissionTypes.every((element, key) => element == incomingMissionTypes[key]))
+            //or showempty is missing
+            || localSettings.showempty == null
         ) {
             console.log("saved settings mismatch with incoming data, reconstructing...");
             //create default settings on the new mission data
@@ -91,6 +100,7 @@ export default function Relics() {
                     title={missionName}
                     missions={data.normal[missionName]}
                     key={missionName}
+                    showempty={displaySettings.showempty}
                 />
             );
         });
@@ -100,6 +110,7 @@ export default function Relics() {
                     title={missionName}
                     missions={data.steelpath[missionName]}
                     key={"sp" + missionName}
+                    showempty={displaySettings.showempty}
                 />
             );
         });
@@ -109,14 +120,14 @@ export default function Relics() {
                 <p className="mx-auto w-max">
                     Last Worldstate Update: {new Date(timestamp).toLocaleTimeString()}
                 </p>
-                <ControlBox settings={displaySettings} togglePane={togglePane} toggleMission={toggleMission} />
+                <ControlBox settings={displaySettings} toggleSetting={toggleSetting} toggleMission={toggleMission} />
                 <div className="flex lg:gap-8 justify-between not-lg:flex-col lg:flex-row xl:mx-32 lg:mx-8 pt-4 mb-32 bg-stone-100 dark:bg-stone-800">
                     <div className={"shadow-inner shadow-stone-300 dark:shadow-stone-950 bg-stone-200 dark:bg-stone-900 grid grid-cols-3 w-[100%] h-min gap-1 sm:gap-4 p-1 sm:p-4" + (displaySettings.normal ? "" : " hidden")}>
-                        <h3 className="px-2 pb-2 min-w-full prose prose-stone dark:prose-invert font-bold col-start-1 col-end-4 border-b-1 border-stone-400 dark:border-stone-500">Normal Mode</h3>
+                        <h3 className="px-2 pb-2 min-w-full prose prose-stone dark:prose-invert font-bold col-start-1 col-end-4 border-b-1 border-stone-400 dark:border-stone-700">Normal Mode</h3>
                         {normalMissions}
                     </div>
                     <div className={"shadow-inner shadow-stone-300 dark:shadow-stone-950 bg-stone-200 dark:bg-stone-900 grid grid-cols-3 w-[100%] h-min gap-1 sm:gap-4 p-1 sm:p-4" + (displaySettings.steelpath ? "" : " hidden")}>
-                        <h3 className="px-2 pb-2 min-w-full prose prose-stone dark:prose-invert font-bold col-start-1 col-end-4 border-b-1 border-stone-400 dark:border-stone-500">Steel Path</h3>
+                        <h3 className="px-2 pb-2 min-w-full prose prose-stone dark:prose-invert font-bold col-start-1 col-end-4 border-b-1 border-stone-400 dark:border-stone-700">Steel Path</h3>
                         {spMissions}
                     </div>
                 </div>

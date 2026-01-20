@@ -1,11 +1,11 @@
-function MissionType(props: { title: String, missions: Array<{ relic: String, node: String, faction: String, until: any }> }): React.ReactNode {
+function MissionType(props: { title: String, missions: Array<{ relic: String, node: String, faction: String, until: any }>, showempty: boolean }): React.ReactNode {
 
     if (!props.missions) return (<></>)
 
     let count = 0;
 
     const missionList = props.missions.map(mission => {
-        return <div className="grid grid-cols-1 py-1 border-b-1 border-stone-400 dark:border-stone-500" key={count++}>
+        return <div className="grid grid-cols-1 py-1 border-b-1 border-stone-400 dark:border-stone-600" key={count++}>
             <div className="inline">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6 inline">
                     <path fillRule="evenodd" d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clipRule="evenodd" />
@@ -34,14 +34,18 @@ function MissionType(props: { title: String, missions: Array<{ relic: String, no
         </div>;
     });
 
-    return (
-        <div className="h-min bg-stone-100 dark:bg-stone-800 p-2 shadow shadow-stone-300 dark:shadow-stone-900 overflow-hidden">
-            <div className="grid grid-cols-1 pb-1">
-                <label className="prose prose-stone dark:prose-invert font-bold border-b-1 border-stone-400 dark:border-stone-500 pb-1">{props.title}</label>
-                <div className="">{missionList}</div>
+    if (!props.showempty && missionList.length == 0) {
+        return <></>
+    } else {
+        return (
+            <div className="h-min bg-stone-100 dark:bg-stone-800 p-2 shadow shadow-stone-300 dark:shadow-stone-900 overflow-hidden">
+                <div className="grid grid-cols-1 pb-1">
+                    <label className="prose prose-stone dark:prose-invert font-bold border-b-1 border-stone-400 dark:border-stone-600 pb-1">{props.title}</label>
+                    <div className="">{missionList}</div>
+                </div>
             </div>
-        </div>
-    )
+        )
+    }
 }
 
 export default MissionType

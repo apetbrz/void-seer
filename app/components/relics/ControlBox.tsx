@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function ControlBox(props: { settings: any, togglePane: Function, toggleMission: Function }) {
+function ControlBox(props: { settings: any, toggleSetting: Function, toggleMission: Function }) {
 
     let [active, setActive]: [Boolean, Function] = useState(false);
 
@@ -14,15 +14,15 @@ function ControlBox(props: { settings: any, togglePane: Function, toggleMission:
         }
     }
 
-    let togglePaneCallback = (name: string) => {
+    let toggleSettingCallback = (name: string) => {
         return () => {
-            props.togglePane(name)
+            props.toggleSetting(name)
         }
     }
 
     let normalButtons = Object.keys(props.settings.missions.normal).map((missionName) => {
         return <button
-            className={"px-1 prose prose-stone dark:prose-invert text-nowrap h-8 shadow shadow-stone-300 dark:shadow-stone-900 bg-stone-100 dark:bg-stone-800 pretty-button" +
+            className={"px-1 prose prose-stone dark:prose-invert text-nowrap h-8 bg-stone-100 dark:bg-stone-800 pretty-button" +
                 (props.settings.missions.normal[missionName] && props.settings.normal ? "" : " opacity-40")}
             onClick={toggleMissionCallback(missionName, false)}
             key={missionName}
@@ -31,7 +31,7 @@ function ControlBox(props: { settings: any, togglePane: Function, toggleMission:
     })
     let steelpathButtons = Object.keys(props.settings.missions.steelpath).map((missionName) => {
         return <button
-            className={"px-1 prose prose-stone dark:prose-invert text-nowrap h-8 shadow shadow-stone-300 dark:shadow-stone-900 bg-stone-100 dark:bg-stone-800 pretty-button" +
+            className={"px-1 prose prose-stone dark:prose-invert text-nowrap h-8 bg-stone-100 dark:bg-stone-800 pretty-button" +
                 (props.settings.missions.steelpath[missionName] && props.settings.steelpath ? "" : " opacity-40")}
             onClick={toggleMissionCallback(missionName, true)}
             key={"sp" + missionName}
@@ -59,33 +59,52 @@ function ControlBox(props: { settings: any, togglePane: Function, toggleMission:
                     }
                 `}</style>
                 <div className="min-h-0">
-                    <div className="mt-4 mb-2 w-max mx-auto">
-                        <h1 className="prose prose-stone dark:prose-invert font-bold">
-                            Mission Visibility Settings
-                        </h1>
-                    </div>
-                    <div className="w-auto py-2 flex lg:flex-row flex-col space-y-2 min-h-0 shadow-inner shadow-stone-300 dark:shadow-stone-950 bg-stone-200 dark:bg-stone-900">
-                        <div className="m-2 flex flex-col items-center gap-2">
-                            <button
-                                className={"px-1 prose prose-stone dark:prose-invert text-nowrap min-w-30 max-w-30 h-8 shadow shadow-stone-300 dark:shadow-stone-900 bg-stone-100 dark:bg-stone-800 pretty-button" +
-                                    (props.settings.normal ? "" : " opacity-40")}
-                                onClick={togglePaneCallback("normal")}
-                            >Normal</button>
-                            <div className="m-0 w-1/3 border-b-1 border-stone-400 dark:border-stone-500"></div>
-                            <div className="flex flex-wrap shrink gap-2 justify-center">
-                                {normalButtons}
-                            </div>
+                    <div className="mt-4 p-2 shadow-inner shadow-stone-300 dark:shadow-stone-950 bg-stone-200 dark:bg-stone-900">
+                        <div className="w-max mx-auto">
+                            <h1 className="prose prose-stone dark:prose-invert font-bold">
+                                Settings
+                            </h1>
                         </div>
-                        <div className="m-0 lg:my-2 not-lg:mx-2 lg:border-l-1 not-lg:border-t-1 border-stone-400 dark:border-stone-500"></div>
-                        <div className="m-2 flex flex-col items-center gap-2">
+                        <div className="mb-2 w-3/4 mx-auto border-b-1 border-stone-400 dark:border-stone-700"></div>
+                        <div className="w-auto flex lg:flex-row flex-col justify-center">
                             <button
-                                className={"px-1 prose prose-stone dark:prose-invert text-nowrap min-w-30 max-w-30 h-8 shadow shadow-stone-300 dark:shadow-stone-900 bg-stone-100 dark:bg-stone-800 pretty-button" +
-                                    (props.settings.steelpath ? "" : " opacity-40")}
-                                onClick={togglePaneCallback("steelpath")}
-                            >Steel Path</button>
-                            <div className="m-0 w-1/3 border-b-1 border-stone-400 dark:border-stone-500"></div>
-                            <div className="flex flex-wrap shrink gap-2 justify-center">
-                                {steelpathButtons}
+                                className={"px-1 prose prose-stone dark:prose-invert text-nowrap h-8 bg-stone-100 dark:bg-stone-800 pretty-button" +
+                                    (props.settings.showempty ? "" : " opacity-40")}
+                                onClick={toggleSettingCallback("showempty")}>
+                                Show Empty Mission Types
+                            </button>
+                        </div>
+                        <div className="w-max mx-auto">
+                            <h1 className="prose prose-stone dark:prose-invert font-bold mt-4">
+                                Mission Visibility Toggles
+                            </h1>
+                        </div>
+                        <div className="mb-2 w-3/4 mx-auto border-b-1 border-stone-400 dark:border-stone-700"></div>
+                        <div className="w-auto flex lg:flex-row flex-col">
+                            <div className="flex flex-col items-center gap-2">
+                                <button
+                                    className={"px-1 prose prose-stone dark:prose-invert text-nowrap min-w-30 max-w-30 h-8 bg-stone-100 dark:bg-stone-800 pretty-button" +
+                                        (props.settings.normal ? "" : " opacity-40")}
+                                    onClick={toggleSettingCallback("normal")}>
+                                    Normal
+                                </button>
+                                <div className="m-0 w-1/3 border-b-1 border-stone-400 dark:border-stone-700"></div>
+                                <div className="flex flex-wrap shrink gap-2 justify-center">
+                                    {normalButtons}
+                                </div>
+                            </div>
+                            <div className="lg:w-0 not-lg:h-0 lg:mx-2 not-lg:my-2 lg:border-l-1 not-lg:border-t-1 border-stone-400 dark:border-stone-700"></div>
+                            <div className="flex flex-col items-center gap-2">
+                                <button
+                                    className={"px-1 prose prose-stone dark:prose-invert text-nowrap min-w-30 max-w-30 h-8 bg-stone-100 dark:bg-stone-800 pretty-button" +
+                                        (props.settings.steelpath ? "" : " opacity-40")}
+                                    onClick={toggleSettingCallback("steelpath")}>
+                                    Steel Path
+                                </button>
+                                <div className="m-0 w-1/3 border-b-1 border-stone-400 dark:border-stone-700"></div>
+                                <div className="flex flex-wrap shrink gap-2 justify-center">
+                                    {steelpathButtons}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -109,6 +128,7 @@ function defaultSettingsFromData(data: { normal: Array<any>, steelpath: Array<an
     let settings = {
         normal: true,
         steelpath: true,
+        showempty: false,
         missions: missions
     };
     return settings
